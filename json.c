@@ -74,7 +74,7 @@ consume_string_val(Scanner *scanner)
     while (scanner->pos < scanner->size &&
            (escaped || scanner->data[scanner->pos] != '"'))
     {
-        escaped = scanner->data[scanner->pos] == '\\';
+        escaped = scanner->data[scanner->pos] == '\\' && !escaped;
         scanner->pos++;
     }
 }
