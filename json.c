@@ -44,6 +44,12 @@ consume_false(Scanner *scanner)
 }
 
 static int
+consume_null(Scanner *scanner)
+{
+    return consume_str(scanner, SV("null"));
+}
+
+static int
 consume_end(Scanner *scanner)
 {
     return !(scanner->pos == scanner->size);
@@ -63,7 +69,10 @@ json_validate(StringView s)
 
     consume_spaces(&scanner);
 
-    if (consume_true(&scanner) && consume_false(&scanner)) {
+    if (consume_true(&scanner) &&
+        consume_false(&scanner) &&
+        consume_null(&scanner))
+    {
         return 1;
     }
 
