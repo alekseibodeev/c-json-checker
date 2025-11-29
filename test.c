@@ -59,5 +59,6 @@ main(int argc, char **argv)
          1);
     test("positive integer number", json_validate(SV("42")), 0);
     test("negative integer number", json_validate(SV("-42")), 0);
+    test("integer with leading zero", json_validate(SV("042")), 1);
     return 0;
 }
