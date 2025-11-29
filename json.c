@@ -94,6 +94,10 @@ consume_string(Scanner *scanner)
 static int
 consume_number(Scanner *scanner)
 {
+    if (scanner->data[scanner->pos] == '-') {
+        scanner->pos++;
+    }
+
     if (!isdigit(scanner->data[scanner->pos])) {
         return 1;
     }
