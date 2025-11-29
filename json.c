@@ -69,9 +69,12 @@ consume_char(Scanner *scanner, char c)
 static void
 consume_string_val(Scanner *scanner)
 {
+    bool escaped = false;
+
     while (scanner->pos < scanner->size &&
-           scanner->data[scanner->pos] != '"')
+           (escaped || scanner->data[scanner->pos] != '"'))
     {
+        escaped = scanner->data[scanner->pos] == '\\';
         scanner->pos++;
     }
 }
