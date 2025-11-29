@@ -91,6 +91,20 @@ consume_string(Scanner *scanner)
     return consume_char(scanner, '"');
 }
 
+static int
+consume_number(Scanner *scanner)
+{
+    if (!isdigit(scanner->data[scanner->pos])) {
+        return 1;
+    }
+
+    while (isdigit(scanner->data[scanner->pos])) {
+        scanner->pos++;
+    }
+
+    return 0;
+}
+
 /*
  * Test whether string s is a valid JSON value
  *
@@ -108,7 +122,8 @@ json_validate(StringView s)
     if (consume_true(&scanner) &&
         consume_false(&scanner) &&
         consume_null(&scanner) &&
-        consume_string(&scanner))
+        consume_string(&scanner) &&
+        consume_number(&scanner))
     {
         return 1;
     }
