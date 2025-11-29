@@ -58,5 +58,6 @@ main(int argc, char **argv)
          json_validate(SV("\"te\\\\\"xt\"")),
          1);
     test("positive integer number", json_validate(SV("42")), 0);
+    test("negative integer number", json_validate(SV("-42")), 0);
     return 0;
 }
