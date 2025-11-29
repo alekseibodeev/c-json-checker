@@ -41,5 +41,6 @@ main(int argc, char **argv)
 {
     test("true keyword", json_validate(SV("true")), 0);
     test("true keyword is part of string", json_validate(SV("truefalse")), 1);
+    test("JSON value has leading spaces", json_validate(SV("  true")), 0);
     return 0;
 }
