@@ -40,5 +40,6 @@ int
 main(int argc, char **argv)
 {
     test("true keyword", json_validate(SV("true")), 0);
+    test("true keyword is part of string", json_validate(SV("truefalse")), 1);
     return 0;
 }
