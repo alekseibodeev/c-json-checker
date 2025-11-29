@@ -108,7 +108,29 @@ consume_number(Scanner *scanner)
         }
     }
 
+    if (scanner->data[scanner->pos] == '.') {
+        scanner->pos++;
+
+        if (!isdigit(scanner->data[scanner->pos])) {
+            return 1;
+        }
+
+        while (isdigit(scanner->data[scanner->pos])) {
+            scanner->pos++;
+        }
+    }
+
     return 0;
+}
+
+static int
+consume_array(Scanner *scanner)
+{
+    if (consume_char(scanner, '[')) {
+        return 1;
+    }
+
+    return consume_char(scanner, ']');
 }
 
 /*
@@ -129,7 +151,8 @@ json_validate(StringView s)
         consume_false(&scanner) &&
         consume_null(&scanner) &&
         consume_string(&scanner) &&
-        consume_number(&scanner))
+        consume_number(&scanner) &&
+        consume_array(&scanner))
     {
         return 1;
     }
