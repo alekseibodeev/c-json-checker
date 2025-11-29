@@ -54,5 +54,8 @@ main(int argc, char **argv)
     test("string with escaped quotation mark",
          json_validate(SV("\"te\\\"xt\"")),
          0);
+    test("string with escaped escape character before quotation mark",
+         json_validate(SV("\"te\\\\\"xt\"")),
+         1);
     return 0;
 }
