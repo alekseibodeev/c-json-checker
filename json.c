@@ -133,9 +133,11 @@ consume_array(Scanner *scanner)
     }
 
     if (scanner->data[scanner->pos] != ']') {
-        if (consume_json_value(scanner)) {
-            return 1;
-        }
+        do {
+            if (consume_json_value(scanner)) {
+                return 1;
+            }
+        } while (consume_char(scanner, ',') == 0);
     }
 
     return consume_char(scanner, ']');
