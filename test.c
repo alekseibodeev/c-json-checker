@@ -67,5 +67,8 @@ main(int argc, char **argv)
     test("float number with trailing zeroes", json_validate(SV("42.500")), 0);
     test("empty array", json_validate(SV("[]")), 0);
     test("array with one value", json_validate(SV("[100]")), 0);
+    test("array with multiple elements",
+         json_validate(SV("[100, \"hello\", null]")),
+         0);
     return 0;
 }
