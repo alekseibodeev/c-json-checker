@@ -50,5 +50,6 @@ main(int argc, char **argv)
     test("JSON value has both leading and trailing spaces",
          json_validate(SV(" true ")),
          0);
+    test("simple string", json_validate(SV("\"text\"")), 0);
     return 0;
 }
