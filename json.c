@@ -25,6 +25,12 @@ consume_true(Scanner *scanner)
     return consume_str(scanner, SV("true"));
 }
 
+static int
+consume_end(Scanner *scanner)
+{
+    return !(scanner->pos == scanner->size);
+}
+
 /*
  * Test whether string s is a valid JSON value
  *
@@ -37,5 +43,5 @@ json_validate(StringView s)
 {
     Scanner scanner = { s.data, s.size, 0 };
 
-    return consume_true(&scanner);
+    return consume_true(&scanner) || consume_end(&scanner);
 }
