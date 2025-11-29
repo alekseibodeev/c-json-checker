@@ -144,6 +144,16 @@ consume_array(Scanner *scanner)
 }
 
 static int
+consume_object(Scanner *scanner)
+{
+    if (consume_char(scanner, '{')) {
+        return 1;
+    }
+
+    return consume_char(scanner, '}');
+}
+
+static int
 consume_json_value(Scanner *scanner)
 {
     consume_spaces(scanner);
@@ -153,7 +163,8 @@ consume_json_value(Scanner *scanner)
         consume_null(scanner) &&
         consume_string(scanner) &&
         consume_number(scanner) &&
-        consume_array(scanner))
+        consume_array(scanner) &&
+        consume_object(scanner))
     {
         return 1;
     }
