@@ -100,10 +100,12 @@ consume_number(Scanner *scanner)
 
     if (!isdigit(scanner->data[scanner->pos])) {
         return 1;
-    }
-
-    while (isdigit(scanner->data[scanner->pos])) {
+    } else if (scanner->data[scanner->pos] == '0') {
         scanner->pos++;
+    } else {
+        while (isdigit(scanner->data[scanner->pos])) {
+            scanner->pos++;
+        }
     }
 
     return 0;
