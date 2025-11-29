@@ -71,5 +71,6 @@ main(int argc, char **argv)
          json_validate(SV("[100, \"hello\", null]")),
          0);
     test("nested array", json_validate(SV("[1, [2, [3, 3], 2], [], 1]")), 0);
+    test("empty object", json_validate(SV("{}")), 0);
     return 0;
 }
