@@ -55,6 +55,38 @@ consume_end(Scanner *scanner)
     return !(scanner->pos == scanner->size);
 }
 
+static int
+consume_char(Scanner *scanner, char c)
+{
+    if (scanner->data[scanner->pos] != c) {
+        return 1;
+    }
+
+    scanner->pos++;
+    return 0;
+}
+
+static void
+consume_string_val(Scanner *scanner)
+{
+    while (scanner->pos < scanner->size &&
+           scanner->data[scanner->pos] != '"')
+    {
+        scanner->pos++;
+    }
+}
+
+static int
+consume_string(Scanner *scanner)
+{
+    if (consume_char(scanner, '"')) {
+        return 1;
+    }
+
+    consume_string_val(scanner);
+    return consume_char(scanner, '"');
+}
+
 /*
  * Test whether string s is a valid JSON value
  *
@@ -71,7 +103,8 @@ json_validate(StringView s)
 
     if (consume_true(&scanner) &&
         consume_false(&scanner) &&
-        consume_null(&scanner))
+        consume_null(&scanner) &&
+        consume_string(&scanner))
     {
         return 1;
     }
