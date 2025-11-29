@@ -2,6 +2,9 @@
 
 #include <stdio.h>
 
+#include "json.h"
+#include "string_view.h"
+
 #define ASNI_COLOR_RED   "\x1b[31m"
 #define ASNI_COLOR_GREEN "\x1b[32m"
 #define ANSI_COLOR_RESET "\x1b[0m"
@@ -36,7 +39,6 @@ test(const char *message, int actual, int expected)
 int
 main(int argc, char **argv)
 {
-    test("passing test example", 0, 0);
-    test("failing test example", 0, 1);
+    test("true keyword", json_validate(SV("true")), 0);
     return 0;
 }
