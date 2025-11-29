@@ -57,5 +57,11 @@ json_validate(StringView s)
 
     consume_spaces(&scanner);
 
-    return consume_true(&scanner) || consume_end(&scanner);
+    if (consume_true(&scanner)) {
+        return 1;
+    }
+
+    consume_spaces(&scanner);
+
+    return consume_end(&scanner);
 }
