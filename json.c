@@ -5,6 +5,8 @@
 #include "scanner.h"
 #include "string_view.h"
 
+static int consume_json_value(Scanner *scanner);
+
 static void
 consume_spaces(Scanner *scanner)
 {
@@ -130,7 +132,33 @@ consume_array(Scanner *scanner)
         return 1;
     }
 
+    if (scanner->data[scanner->pos] != ']') {
+        if (consume_json_value(scanner)) {
+            return 1;
+        }
+    }
+
     return consume_char(scanner, ']');
+}
+
+static int
+consume_json_value(Scanner *scanner)
+{
+    consume_spaces(scanner);
+
+    if (consume_true(scanner) &&
+        consume_false(scanner) &&
+        consume_null(scanner) &&
+        consume_string(scanner) &&
+        consume_number(scanner) &&
+        consume_array(scanner))
+    {
+        return 1;
+    }
+
+    consume_spaces(scanner);
+
+    return 0;
 }
 
 /*
@@ -145,19 +173,9 @@ json_validate(StringView s)
 {
     Scanner scanner = { s.data, s.size, 0 };
 
-    consume_spaces(&scanner);
-
-    if (consume_true(&scanner) &&
-        consume_false(&scanner) &&
-        consume_null(&scanner) &&
-        consume_string(&scanner) &&
-        consume_number(&scanner) &&
-        consume_array(&scanner))
-    {
+    if (consume_json_value(&scanner)) {
         return 1;
     }
-
-    consume_spaces(&scanner);
 
     return consume_end(&scanner);
 }
