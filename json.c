@@ -1,5 +1,29 @@
 #include "json.h"
+#include "scanner.h"
 #include "string_view.h"
+
+static int
+consume_str(Scanner *scanner, StringView pattern)
+{
+    if (pattern.size > scanner->size - scanner->pos) {
+        return 1;
+    }
+
+    for (int i = 0; i < pattern.size; ++i) {
+        if (scanner->data[scanner->pos + i] != pattern.data[i]) {
+            return 1;
+        }
+    }
+
+    scanner->pos += pattern.size;
+    return 0;
+}
+
+static int
+consume_true(Scanner *scanner)
+{
+    return consume_str(scanner, SV("true"));
+}
 
 /*
  * Test whether string s is a valid JSON value
@@ -11,5 +35,7 @@
 int
 json_validate(StringView s)
 {
-    return 1;
+    Scanner scanner = { s.data, s.size, 0 };
+
+    return consume_true(&scanner);
 }
