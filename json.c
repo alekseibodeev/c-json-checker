@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <stdbool.h>
 
 #include "json.h"
 #include "scanner.h"
