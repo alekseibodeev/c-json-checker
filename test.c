@@ -57,5 +57,6 @@ main(int argc, char **argv)
     test("string with escaped escape character before quotation mark",
          json_validate(SV("\"te\\\\\"xt\"")),
          1);
+    test("positive integer number", json_validate(SV("42")), 0);
     return 0;
 }
