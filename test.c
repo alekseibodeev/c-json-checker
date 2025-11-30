@@ -79,5 +79,8 @@ main(int argc, char **argv)
          json_check(SV("{\"key1\": true,\n\"key2\": false,\n\"key3\": \"value\"}")),
          0);
     test("nested object", json_check(SV("{\"key1\": {\"key2\": {}}}")), 0);
+    test("object with spaces between a key and a colon",
+         json_check(SV("{\"key\"   : \"value\"}")),
+         0);
     return 0;
 }
