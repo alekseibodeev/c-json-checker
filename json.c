@@ -150,6 +150,14 @@ consume_object(Scanner *scanner)
         return 1;
     }
 
+    if (scanner->data[scanner->pos] != '}' &&
+        (consume_string(scanner) ||
+         consume_char(scanner, ':') ||
+         consume_json_value(scanner)))
+    {
+        return 1;
+    }
+
     return consume_char(scanner, '}');
 }
 
