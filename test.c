@@ -65,6 +65,11 @@ main(int argc, char **argv)
     test("positive float number", json_check(SV("42.5")), 0);
     test("negative float number", json_check(SV("-42.5")), 0);
     test("float number with trailing zeroes", json_check(SV("42.500")), 0);
+    test("integer with exponent", json_check(SV("42e05")), 0);
+    test("integer with capitalized exponent", json_check(SV("42E05")), 0);
+    test("integer with positive exponent", json_check(SV("42e+05")), 0);
+    test("integer with negative exponent", json_check(SV("42e-05")), 0);
+    test("float with exponent", json_check(SV("-42.5e10")), 0);
     test("empty array", json_check(SV("[]")), 0);
     test("array with one value", json_check(SV("[100]")), 0);
     test("array with multiple elements",
