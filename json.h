@@ -3,6 +3,6 @@
 
 #include "string_view.h"
 
-int json_validate(StringView s);
+int json_check(StringView s);
 
 #endif

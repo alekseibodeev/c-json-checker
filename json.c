@@ -195,7 +195,7 @@ consume_json_value(Scanner *scanner)
  *          1 on failure
  */
 int
-json_validate(StringView s)
+json_check(StringView s)
 {
     Scanner scanner = { s.data, s.size, 0 };
 
