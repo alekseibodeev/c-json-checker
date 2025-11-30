@@ -199,9 +199,5 @@ json_check(StringView s)
 {
     Scanner scanner = { s.data, s.size, 0 };
 
-    if (consume_json_value(&scanner)) {
-        return 1;
-    }
-
-    return consume_end(&scanner);
+    return consume_json_value(&scanner) || consume_end(&scanner);
 }
