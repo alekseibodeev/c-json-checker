@@ -150,12 +150,17 @@ consume_object(Scanner *scanner)
         return 1;
     }
 
-    if (scanner->data[scanner->pos] != '}' &&
-        (consume_string(scanner) ||
-         consume_char(scanner, ':') ||
-         consume_json_value(scanner)))
-    {
-        return 1;
+    if (scanner->data[scanner->pos] != '}') {
+        do {
+            consume_spaces(scanner);
+
+            if (consume_string(scanner) ||
+                consume_char(scanner, ':') ||
+                consume_json_value(scanner))
+            {
+                return 1;
+            }
+        } while (consume_char(scanner, ',') == 0);
     }
 
     return consume_char(scanner, '}');
