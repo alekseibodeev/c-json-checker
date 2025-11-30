@@ -78,5 +78,6 @@ main(int argc, char **argv)
     test("object with multiple entries",
          json_validate(SV("{\"key1\": true,\n\"key2\": false,\n\"key3\": \"value\"}")),
          0);
+    test("nested object", json_validate(SV("{\"key1\": {\"key2\": {}}}")), 0);
     return 0;
 }
