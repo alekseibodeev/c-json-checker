@@ -129,6 +129,26 @@ consume_number(Scanner *scanner)
         }
     }
 
+    if (scanner->data[scanner->pos] == 'e' ||
+        scanner->data[scanner->pos] == 'E')
+    {
+        scanner->pos++;
+
+        if (scanner->data[scanner->pos] == '+' ||
+            scanner->data[scanner->pos] == '-')
+        {
+            scanner->pos++;
+        }
+
+        if (!isdigit(scanner->data[scanner->pos])) {
+            return 1;
+        }
+
+        while (isdigit(scanner->data[scanner->pos])) {
+            scanner->pos++;
+        }
+    }
+
     return 0;
 }
 
@@ -174,18 +194,13 @@ consume_object(Scanner *scanner)
 static int
 consume_json_value(Scanner *scanner)
 {
-    if (consume_true(scanner) &&
-        consume_false(scanner) &&
-        consume_null(scanner) &&
-        consume_string(scanner) &&
-        consume_number(scanner) &&
-        consume_array(scanner) &&
-        consume_object(scanner))
-    {
-        return 1;
-    }
-
-    return 0;
+    return (consume_true(scanner) &&
+            consume_false(scanner) &&
+            consume_null(scanner) &&
+            consume_string(scanner) &&
+            consume_number(scanner) &&
+            consume_array(scanner) &&
+            consume_object(scanner));
 }
 
 /*
