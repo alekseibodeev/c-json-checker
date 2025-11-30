@@ -24,6 +24,8 @@ consume_str(Scanner *scanner, StringView pattern)
         return 1;
     }
 
+    consume_spaces(scanner);
+
     for (int i = 0; i < pattern.size; ++i) {
         if (scanner->data[scanner->pos + i] != pattern.data[i]) {
             return 1;
@@ -55,12 +57,15 @@ consume_null(Scanner *scanner)
 static int
 consume_end(Scanner *scanner)
 {
+    consume_spaces(scanner);
     return !(scanner->pos == scanner->size);
 }
 
 static int
 consume_char(Scanner *scanner, char c)
 {
+    consume_spaces(scanner);
+
     if (scanner->data[scanner->pos] != c) {
         return 1;
     }
@@ -96,6 +101,8 @@ consume_string(Scanner *scanner)
 static int
 consume_number(Scanner *scanner)
 {
+    consume_spaces(scanner);
+
     if (scanner->data[scanner->pos] == '-') {
         scanner->pos++;
     }
@@ -152,8 +159,6 @@ consume_object(Scanner *scanner)
 
     if (scanner->data[scanner->pos] != '}') {
         do {
-            consume_spaces(scanner);
-
             if (consume_string(scanner) ||
                 consume_char(scanner, ':') ||
                 consume_json_value(scanner))
@@ -169,8 +174,6 @@ consume_object(Scanner *scanner)
 static int
 consume_json_value(Scanner *scanner)
 {
-    consume_spaces(scanner);
-
     if (consume_true(scanner) &&
         consume_false(scanner) &&
         consume_null(scanner) &&
@@ -181,8 +184,6 @@ consume_json_value(Scanner *scanner)
     {
         return 1;
     }
-
-    consume_spaces(scanner);
 
     return 0;
 }
