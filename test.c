@@ -75,5 +75,8 @@ main(int argc, char **argv)
     test("object with one entry",
          json_validate(SV("{\"key\": \"value\"}")),
          0);
+    test("object with multiple entries",
+         json_validate(SV("{\"key1\": true,\n\"key2\": false,\n\"key3\": \"value\"}")),
+         0);
     return 0;
 }
