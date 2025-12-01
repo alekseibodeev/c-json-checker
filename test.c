@@ -39,53 +39,113 @@ test(const char *message, int actual, int expected)
 int
 main(int argc, char **argv)
 {
-    test("true keyword", json_check(SV("true")), 0);
-    test("false keyword", json_check(SV("false")), 0);
-    test("null keyword", json_check(SV("null")), 0);
-    test("JSON keyword is part of invalid string",
+    /* Keyword tests */
+    test("true keyword",
+         json_check(SV("true")),
+         0);
+    test("false keyword",
+         json_check(SV("false")),
+         0);
+    test("null keyword",
+         json_check(SV("null")),
+         0);
+    test("concatenated keywords",
          json_check(SV("truefalse")),
          1);
-    test("JSON value has leading spaces", json_check(SV("  true")), 0);
-    test("JSON value has trailing spaces", json_check(SV("true  ")), 0);
-    test("JSON value has both leading and trailing spaces",
-         json_check(SV(" true ")),
+
+    /* String tests */
+    test("simple string",
+         json_check(SV("\"text\"")),
          0);
-    test("simple string", json_check(SV("\"text\"")), 0);
     test("string with escaped quotation mark",
          json_check(SV("\"te\\\"xt\"")),
          0);
     test("string with escaped escape character before quotation mark",
          json_check(SV("\"te\\\\\"xt\"")),
          1);
-    test("positive integer number", json_check(SV("42")), 0);
-    test("negative integer number", json_check(SV("-42")), 0);
-    test("zero number", json_check(SV("0")), 0);
-    test("negative zero number", json_check(SV("-0")), 0);
-    test("integer with leading zero", json_check(SV("042")), 1);
-    test("positive float number", json_check(SV("42.5")), 0);
-    test("negative float number", json_check(SV("-42.5")), 0);
-    test("float number with trailing zeroes", json_check(SV("42.500")), 0);
-    test("integer with exponent", json_check(SV("42e05")), 0);
-    test("integer with capitalized exponent", json_check(SV("42E05")), 0);
-    test("integer with positive exponent", json_check(SV("42e+05")), 0);
-    test("integer with negative exponent", json_check(SV("42e-05")), 0);
-    test("float with exponent", json_check(SV("-42.5e10")), 0);
-    test("empty array", json_check(SV("[]")), 0);
-    test("array with one value", json_check(SV("[100]")), 0);
+
+    /* Number tests */
+    test("positive integer number",
+         json_check(SV("42")),
+         0);
+    test("negative integer number",
+         json_check(SV("-42")),
+         0);
+    test("zero number",
+         json_check(SV("0")),
+         0);
+    test("negative zero number",
+         json_check(SV("-0")),
+         0);
+    test("integer with leading zero",
+         json_check(SV("042")),
+         1);
+    test("positive float number",
+         json_check(SV("42.5")),
+         0);
+    test("negative float number",
+         json_check(SV("-42.5")),
+         0);
+    test("float number with trailing zeroes",
+         json_check(SV("42.500")),
+         0);
+    test("integer with exponent",
+         json_check(SV("42e05")),
+         0);
+    test("integer with capitalized exponent",
+         json_check(SV("42E05")),
+         0);
+    test("integer with positive exponent",
+         json_check(SV("42e+05")),
+         0);
+    test("integer with negative exponent",
+         json_check(SV("42e-05")),
+         0);
+    test("float with exponent",
+         json_check(SV("-42.5e10")),
+         0);
+
+    /* Array tests */
+    test("empty array",
+         json_check(SV("[]")),
+         0);
+    test("array with one value",
+         json_check(SV("[100]")),
+         0);
     test("array with multiple elements",
          json_check(SV("[100, \"hello\", null]")),
          0);
-    test("nested array", json_check(SV("[1, [2, [3, 3], 2], [], 1]")), 0);
-    test("empty object", json_check(SV("{}")), 0);
+    test("nested array",
+         json_check(SV("[1, [2, [3, 3], 2], [], 1]")),
+         0);
+
+    /* Object tests */
+    test("empty object",
+         json_check(SV("{}")),
+         0);
     test("object with one entry",
          json_check(SV("{\"key\": \"value\"}")),
          0);
     test("object with multiple entries",
          json_check(SV("{\"key1\": true,\n\"key2\": false,\n\"key3\": \"value\"}")),
          0);
-    test("nested object", json_check(SV("{\"key1\": {\"key2\": {}}}")), 0);
+    test("nested object",
+         json_check(SV("{\"key1\": {\"key2\": {}}}")),
+         0);
     test("object with spaces between a key and a colon",
          json_check(SV("{\"key\"   : \"value\"}")),
          0);
+
+    /* Structure tests */
+    test("JSON value has leading spaces",
+         json_check(SV("  true")),
+         0);
+    test("JSON value has trailing spaces",
+         json_check(SV("true  ")),
+         0);
+    test("JSON value has both leading and trailing spaces",
+         json_check(SV(" true ")),
+         0);
+
     return 0;
 }
