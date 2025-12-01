@@ -54,14 +54,52 @@ main(int argc, char **argv)
          1);
 
     /* String tests */
+    /* Valid */
+    test("empty string",
+         json_check(SV("\"\"")),
+         0);
     test("simple string",
          json_check(SV("\"text\"")),
          0);
-    test("string with escaped quotation mark",
-         json_check(SV("\"te\\\"xt\"")),
+    test("escape quotation mark",
+         json_check(SV("\"\\\"\"")),
          0);
-    test("string with escaped escape character before quotation mark",
-         json_check(SV("\"te\\\\\"xt\"")),
+    test("escape reverse solidus",
+         json_check(SV("\"\\\\\"")),
+         0);
+    test("escape solidus",
+         json_check(SV("\"\\/\"")),
+         0);
+    test("escape backspace",
+         json_check(SV("\"\\b\"")),
+         0);
+    test("escape formeed",
+         json_check(SV("\"\\f\"")),
+         0);
+    test("escape linefeed",
+         json_check(SV("\"\\n\"")),
+         0);
+    test("escape carriage return",
+         json_check(SV("\"\\r\"")),
+         0);
+    test("escape horizontal tab",
+         json_check(SV("\"\\t\"")),
+         0);
+    test("escape unicode hex sequence",
+         json_check(SV("\"\\u0411\"")),
+         0);
+    /* Invalid */
+    test("unterminated string",
+         json_check(SV("\"text")),
+         1);
+    test("invalid escape character",
+         json_check(SV("\"\\a\"")),
+         1);
+    test("non-hex digits in unicode sequence",
+         json_check(SV("\"\\uxxxx\"")),
+         1);
+    test("less that 4 hex digits in unicode sequence",
+         json_check(SV("\"\\u041\"")),
          1);
 
     /* Number tests */
