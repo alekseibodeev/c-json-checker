@@ -65,45 +65,59 @@ main(int argc, char **argv)
          1);
 
     /* Number tests */
-    test("positive integer number",
+    /* Valid */
+    test("positive integer",
          json_check(SV("42")),
          0);
-    test("negative integer number",
+    test("negative integer",
          json_check(SV("-42")),
          0);
-    test("zero number",
+    test("zero",
          json_check(SV("0")),
          0);
-    test("negative zero number",
+    test("negative zero",
          json_check(SV("-0")),
          0);
-    test("integer with leading zero",
-         json_check(SV("042")),
-         1);
-    test("positive float number",
+    test("float",
          json_check(SV("42.5")),
          0);
     test("negative float number",
          json_check(SV("-42.5")),
          0);
-    test("float number with trailing zeroes",
+    test("float with trailing zeroes",
          json_check(SV("42.500")),
          0);
-    test("integer with exponent",
+    test("float with leading zero",
+         json_check(SV("0.5")),
+         0);
+    test("exponent",
          json_check(SV("42e05")),
          0);
-    test("integer with capitalized exponent",
+    test("exponent capitalized",
          json_check(SV("42E05")),
          0);
-    test("integer with positive exponent",
+    test("positive sign exponent",
          json_check(SV("42e+05")),
          0);
-    test("integer with negative exponent",
+    test("negative sign exponent",
          json_check(SV("42e-05")),
          0);
-    test("float with exponent",
-         json_check(SV("-42.5e10")),
-         0);
+    /* Invalid */
+    test("integer with leading zero",
+         json_check(SV("042")),
+         1);
+    test("missing fraction",
+         json_check(SV("42.")),
+         1);
+    test("missing exponent",
+         json_check(SV("42e")),
+         1);
+    test("double unary minus",
+         json_check(SV("--42")),
+         1);
+    test("two floating points in one number",
+         json_check(SV("42.0.1")),
+         1);
 
     /* Array tests */
     test("empty array",
