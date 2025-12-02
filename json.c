@@ -116,7 +116,7 @@ consume_escape(Scanner *scanner)
 }
 
 static int
-consume_string_val(Scanner *scanner)
+consume_string_value(Scanner *scanner)
 {
     bool escaped = false;
 
@@ -147,7 +147,7 @@ consume_string(Scanner *scanner)
     size_t saved_pos = scanner->pos;
 
     if (consume_char(scanner, '"') ||
-        consume_string_val(scanner) ||
+        consume_string_value(scanner) ||
         consume_char(scanner, '"'))
     {
         scanner->pos = saved_pos;
