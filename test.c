@@ -196,18 +196,31 @@ main(int argc, char **argv)
     test("empty object",
          json_check(SV("{}")),
          0);
-    test("object with one entry",
+    test("object of one entry",
          json_check(SV("{\"key\": \"value\"}")),
          0);
-    test("object with multiple entries",
+    test("object of multiple entries",
          json_check(SV("{\"key1\": true,\n\"key2\": false,\n\"key3\": \"value\"}")),
          0);
     test("nested object",
          json_check(SV("{\"key1\": {\"key2\": {}}}")),
          0);
-    test("object with spaces between a key and a colon",
-         json_check(SV("{\"key\"   : \"value\"}")),
+    test("empty object with spaces around curlies",
+         json_check(SV("  {     }  ")),
          0);
+    test("object with spaces around key and value",
+         json_check(SV("{   \"key\"   : \"value\"   }")),
+         0);
+    /* Invalid */
+    test("object with no key",
+         json_check(SV("{0}")),
+         1);
+    test("object with unbalanced curlies",
+         json_check(SV("{\"key\": \"value\"")),
+         1);
+    test("object with no colon",
+         json_check(SV("{\"key\" \"value\"}")),
+         1);
 
     /* Structure tests */
     test("JSON value has leading spaces",
