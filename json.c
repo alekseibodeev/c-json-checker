@@ -209,6 +209,8 @@ consume_array(Scanner *scanner)
         return 1;
     }
 
+    consume_spaces(scanner);
+
     if (scanner->data[scanner->pos] != ']') {
         do {
             if (consume_json_value(scanner)) {
