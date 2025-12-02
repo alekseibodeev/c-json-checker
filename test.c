@@ -158,20 +158,41 @@ main(int argc, char **argv)
          1);
 
     /* Array tests */
+    /* Valid */
     test("empty array",
          json_check(SV("[]")),
          0);
-    test("array with one value",
-         json_check(SV("[100]")),
+    test("array of one element",
+         json_check(SV("[0]")),
          0);
-    test("array with multiple elements",
-         json_check(SV("[100, \"hello\", null]")),
+    test("array of multiple elements",
+         json_check(SV("[0, \"test\", null, true, false]")),
          0);
     test("nested array",
-         json_check(SV("[1, [2, [3, 3], 2], [], 1]")),
+         json_check(SV("[[0]]")),
          0);
+    test("deeply nested array",
+         json_check(SV("[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]")),
+         0);
+    test("empty array with spaces inside",
+         json_check(SV("[          ]")),
+         0);
+    test("array of one element with spaces around brackets",
+         json_check(SV("  [  0  ]  ")),
+         0);
+    test("array of two element with spaces around comma",
+         json_check(SV("[ 1  ,  2]")),
+         0);
+    /* Invalid */
+    test("array with unbalanced brackets",
+         json_check(SV("[[[[[[[[[[[[[[[[0")),
+         1);
+    test("array with no comma separator",
+         json_check(SV("[1 2]")),
+         1);
 
     /* Object tests */
+    /* Valid */
     test("empty object",
          json_check(SV("{}")),
          0);
