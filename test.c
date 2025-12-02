@@ -40,6 +40,7 @@ int
 main(int argc, char **argv)
 {
     /* Keyword tests */
+    /* Valid */
     test("true keyword",
          json_check(SV("true")),
          0);
@@ -49,6 +50,10 @@ main(int argc, char **argv)
     test("null keyword",
          json_check(SV("null")),
          0);
+    test("keyword surrounded by spaces",
+         json_check(SV(" true ")),
+         0);
+    /* Invalid */
     test("concatenated keywords",
          json_check(SV("truefalse")),
          1);
@@ -223,15 +228,19 @@ main(int argc, char **argv)
          1);
 
     /* Structure tests */
-    test("JSON value has leading spaces",
-         json_check(SV("  true")),
-         0);
-    test("JSON value has trailing spaces",
-         json_check(SV("true  ")),
-         0);
-    test("JSON value has both leading and trailing spaces",
-         json_check(SV(" true ")),
-         0);
+    /* Invalid */
+    test("unexpected unary minus before an array",
+         json_check(SV("-[]")),
+         1);
+    test("unexpected unary minus before an object",
+         json_check(SV("-{}")),
+         1);
+    test("unbalanced brances",
+         json_check(SV("[{{}")),
+         1);
+    test("valid value part of invalid escape in unterminated string",
+         json_check(SV("\"\\{}")),
+         1);
 
     return 0;
 }
