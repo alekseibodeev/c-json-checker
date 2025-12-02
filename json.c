@@ -74,7 +74,47 @@ consume_char(Scanner *scanner, char c)
     return 0;
 }
 
-static void
+static int
+consume_hex_digit(Scanner *scanner)
+{
+    if (isdigit(scanner->data[scanner->pos]) ||
+        (scanner->data[scanner->pos] >= 'A' &&
+         scanner->data[scanner->pos] <= 'F') ||
+        (scanner->data[scanner->pos] >= 'a' &&
+         scanner->data[scanner->pos] <= 'f'))
+    {
+        scanner->pos++;
+        return 0;
+    }
+
+    return 1;
+}
+
+static int
+consume_unicode_escape(Scanner *scanner)
+{
+    return (consume_char(scanner, 'u') ||
+            consume_hex_digit(scanner) ||
+            consume_hex_digit(scanner) ||
+            consume_hex_digit(scanner) ||
+            consume_hex_digit(scanner));
+}
+
+static int
+consume_escape(Scanner *scanner)
+{
+    return (consume_char(scanner, '"') &&
+            consume_char(scanner, '\\') &&
+            consume_char(scanner, '/') &&
+            consume_char(scanner, 'b') &&
+            consume_char(scanner, 'f') &&
+            consume_char(scanner, 'n') &&
+            consume_char(scanner, 'r') &&
+            consume_char(scanner, 't') &&
+            consume_unicode_escape(scanner));
+}
+
+static int
 consume_string_val(Scanner *scanner)
 {
     bool escaped = false;
@@ -82,20 +122,30 @@ consume_string_val(Scanner *scanner)
     while (scanner->pos < scanner->size &&
            (escaped || scanner->data[scanner->pos] != '"'))
     {
-        escaped = scanner->data[scanner->pos] == '\\' && !escaped;
-        scanner->pos++;
+        if (escaped) {
+            if (consume_escape(scanner)) {
+                return 1;
+            }
+
+            escaped = false;
+        } else {
+            if (scanner->data[scanner->pos] == '\\') {
+                escaped = true;
+            }
+
+            scanner->pos++;
+        }
     }
+
+    return 0;
 }
 
 static int
 consume_string(Scanner *scanner)
 {
-    if (consume_char(scanner, '"')) {
-        return 1;
-    }
-
-    consume_string_val(scanner);
-    return consume_char(scanner, '"');
+    return (consume_char(scanner, '"') ||
+            consume_string_val(scanner) ||
+            consume_char(scanner, '"'));
 }
 
 static int
