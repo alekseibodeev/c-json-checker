@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #include "json.h"
 #include "scanner.h"
@@ -143,9 +144,17 @@ consume_string_val(Scanner *scanner)
 static int
 consume_string(Scanner *scanner)
 {
-    return (consume_char(scanner, '"') ||
-            consume_string_val(scanner) ||
-            consume_char(scanner, '"'));
+    size_t saved_pos = scanner->pos;
+
+    if (consume_char(scanner, '"') ||
+        consume_string_val(scanner) ||
+        consume_char(scanner, '"'))
+    {
+        scanner->pos = saved_pos;
+        return 1;
+    }
+
+    return 0;
 }
 
 static int
@@ -153,11 +162,14 @@ consume_number(Scanner *scanner)
 {
     consume_spaces(scanner);
 
+    size_t saved_pos = scanner->pos;
+
     if (scanner->data[scanner->pos] == '-') {
         scanner->pos++;
     }
 
     if (!isdigit(scanner->data[scanner->pos])) {
+        scanner->pos = saved_pos;
         return 1;
     } else if (scanner->data[scanner->pos] == '0') {
         scanner->pos++;
@@ -171,6 +183,7 @@ consume_number(Scanner *scanner)
         scanner->pos++;
 
         if (!isdigit(scanner->data[scanner->pos])) {
+            scanner->pos = saved_pos;
             return 1;
         }
 
@@ -191,6 +204,7 @@ consume_number(Scanner *scanner)
         }
 
         if (!isdigit(scanner->data[scanner->pos])) {
+            scanner->pos = saved_pos;
             return 1;
         }
 
@@ -205,6 +219,8 @@ consume_number(Scanner *scanner)
 static int
 consume_array(Scanner *scanner)
 {
+    size_t saved_pos = scanner->pos;
+
     if (consume_char(scanner, '[')) {
         return 1;
     }
@@ -214,6 +230,7 @@ consume_array(Scanner *scanner)
     if (scanner->data[scanner->pos] != ']') {
         do {
             if (consume_json_value(scanner)) {
+                scanner->pos = saved_pos;
                 return 1;
             }
         } while (consume_char(scanner, ',') == 0);
