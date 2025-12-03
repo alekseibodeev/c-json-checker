@@ -6,10 +6,12 @@
 #define RF_BUFFER_BASE_CAPACITY 128
 
 #define RF_ASSERT_ALLOC(ptr) \
-    if (ptr == NULL) { \
-        fprintf(stderr, "ERROR: memory allocation failed successfully.\n"); \
-        exit(1); \
-    }
+    do { \
+        if (ptr == NULL) { \
+            fprintf(stderr, "ERROR: memory allocation failed successfully.\n"); \
+            exit(1); \
+        } \
+    } while (0)
 
 /*
  * Read file content into string view
